@@ -31,7 +31,7 @@ var STATIC_PROFILES = [
     department: "Department of Economics",
     height: "5'10\"",
     interests: ["Philosophy", "Reading", "PWD", "Sports"],
-    bio: "Looking for someone who can convince me that life isn't all timetables, assignemnt deadlines, and attendance sheets",
+    bio: "Looking for someone who can convince me that life isn't all about timetables, assignemnt deadlines, and attendance sheets",
     image: "profile/1.png",
     location: "Department of Economics"
   },
