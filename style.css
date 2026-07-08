@@ -1,0 +1,312 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:black;
+    overflow-x:hidden;
+}
+
+.hero{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100vh;
+}
+
+video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.bg-image{
+    position:absolute;
+    inset:0;
+    background:url("bgimg.png") center center/cover no-repeat;
+    z-index:2;
+}
+
+.logo{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:450px;
+    z-index:3;
+}
+
+/* CONTENT OVER VIDEO */
+
+.campus-section{
+    position:fixed;
+    inset:0;
+    z-index:20;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    padding-left:10%;
+
+    background:transparent;
+
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.badge{
+    display:inline-block;
+    width:max-content;
+
+    padding:9.6px 19.2px;
+
+    border:1px solid rgb(0, 0, 0);
+    border-radius:999px;
+
+    backdrop-filter:blur(10px);
+
+    color:black;
+
+    font-family:sans-serif;
+    font-size:11.2px;
+    font-weight:600;
+
+    margin-bottom:20px;
+}
+
+.campus-section h1{
+    font-family:sans-serif;
+
+    font-size:72px;
+    line-height:1.05;
+
+    color:white;
+
+    margin-bottom:20px;
+
+    text-shadow:
+    0 0 20px rgba(0,0,0,.6),
+    0 0 40px rgba(0,0,0,.4);
+}
+
+.campus-section h1 span{
+    color:white;
+}
+
+.english{
+    color:black;
+    font-size:20px;
+    line-height:1.8;
+
+    text-align:left;
+    max-width:700px;
+}
+
+.arabic{
+    color:white;
+    font-size:17.6px;
+
+    direction:rtl;
+    text-align:right;
+
+    margin-top:8px;
+    margin-bottom:20px;
+
+    font-weight:bold;
+
+    max-width:700px;
+}
+.campus-section button{
+    width:224px;
+    height:56px;
+
+    border:none;
+    border-radius:14px;
+
+    background:#f84328;
+    color:black;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.campus-section button:hover{
+    transform:translateY(-3px);
+}
+
+.button-group{
+    display:flex;
+    gap:16px;              /* space between buttons */
+    margin-top:16px;
+}
+
+.button-group button{
+    width:224px;
+    height:56px;
+
+    border:none;
+    border-radius:14px;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+    transition:.3s;
+}
+
+#createProfileBtn{
+    background:#f84328;
+    color:black;
+}
+
+#findJamianBtn{
+    background:#356734;
+    color:white;
+
+}
+
+.button-group button:hover{
+    transform:translateY(-3px);
+}
+
+#streetViewContainer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    z-index: 99999;
+
+    display: none;   /* Initially hidden */
+}
+
+#streetViewContainer iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.about-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 14px 24px;
+    background: #eb3114;
+    color: #fff;
+    border: 1px solid #000;
+    border-radius: 14px;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s ease;
+    z-index: 999;
+}
+
+.about-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+.about-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-box {
+    background: #fff;
+    padding: 40px 45px;
+    border-radius: 16px;
+    position: relative;
+    text-align: left;
+    font-family: sans-serif;
+    color: #222;
+
+    width: 90%;
+    max-width: 620px;
+    max-height: 80vh;
+    overflow-y: auto;
+
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-box {
+    transform: scale(1);
+}
+
+.modal-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #125a11;
+}
+
+.modal-subtitle {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 28px;
+    margin-bottom: 14px;
+    color: #125a11;
+}
+
+.modal-box p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 18px;
+    color: #333;
+}
+
+.modal-box a {
+    color: #125a11;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.modal-signature {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7;
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #444;
+}

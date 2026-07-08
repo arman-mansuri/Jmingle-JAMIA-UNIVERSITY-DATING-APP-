@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JMingle | Build Your Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --peach-bg:#f6e6d3;
+    --peach-card:#fffaf2;
+    --peach-field:#fdf1e1;
+    --orange:#d98a4f;
+    --orange-soft:#f0c299;
+    --orange-tag:#fbe3c6;
+    --green-deep:#1c3829;
+    --green-mid:#2c5641;
+    --green-line:#3d6b52;
+    --ink:#1f2b22;
+    --muted:#6f7d72;
+    --stamp-empty:#e3d3ba;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html, body{ height:100%; }
+  body{
+    background:var(--peach-card);
+    font-family:'Manrope', sans-serif;
+    color:var(--ink);
+    height:100vh;
+    width:100vw;
+    overflow:hidden;
+  }
+  .stage{
+    width:100vw;
+    height:100vh;
+    background:var(--peach-card);
+    display:grid;
+    grid-template-columns:280px 1fr;
+    overflow:hidden;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    background:var(--green-deep);
+    color:#f3ede1;
+    padding:32px 26px;
+    display:flex;
+    flex-direction:column;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:38px;
+  }
+  .brand-mark{
+    width:34px;height:34px;border-radius:9px;
+    background:#f84328;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:700;color:var(--green-deep);
+    font-size:18px;
+  }
+  .brand-name{
+    font-family:'Fraunces',serif;
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  .brand-sub{
+    font-size:11px;
+    color:#b9c9bd;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-top:-34px;
+    margin-bottom:36px;
+    margin-left:44px;
+  }
+
+  .nav-steps{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    flex:1;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:13px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    border:none;
+    background:transparent;
+    color:#cfd9d1;
+    text-align:left;
+    font-family:'Manrope',sans-serif;
+    transition:background .2s ease, color .2s ease;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,0.06); }
+  .nav-item.active{
+    background:var(--green-mid);
+    color:#fffaf2;
+  }
+  .stamp{
+    width:30px;height:30px;
+    border-radius:50%;
+    border:2px solid var(--green-line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;
+    flex-shrink:0;
+    color:#cfd9d1;
+    transition:all .25s ease;
+  }
+  .nav-item.active .stamp{
+    border-color:#f84328;
+    background:#f84328;
+    color:var(--green-deep);
+  }
+  .nav-item.done .stamp{
+    border-color:#f84328;
+    background:transparent;
+    color:var(--orange-soft);
+  }
+  .nav-label{
+    display:flex;
+    flex-direction:column;
+    line-height:1.25;
+  }
+  .nav-label span.title{
+    font-size:14.5px;font-weight:600;
+  }
+  .nav-label span.desc{
+    font-size:11.5px;
+    color:#93a397;
+  }
+  .nav-item.active .nav-label span.desc{ color:#d7e3da; }
+
+  .sidebar-footer{
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    font-size:11.5px;
+    color:#93a397;
+    line-height:1.5;
+  }
+
+  /* ---------- CONTENT ---------- */
+  .content{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .content-scroll{
+    flex:1;
+    overflow-y:auto;
+    padding:36px 48px 20px 48px;
+  }
+  .content-scroll::-webkit-scrollbar{ width:8px; }
+  .content-scroll::-webkit-scrollbar-thumb{ background:var(--orange-soft); border-radius:8px; }
+
+  .panel{ display:none; animation:fade .35s ease; }
+  .panel.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .eyebrow{
+    font-size:11.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--orange);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  h1.panel-title{
+    font-family:'Fraunces',serif;
+    font-size:30px;
+    font-weight:600;
+    margin:0 0 6px 0;
+    color:#356734;
+  }
+  p.panel-sub{
+    color:var(--muted);
+    font-size:14.5px;
+    margin:0 0 28px 0;
+    max-width:520px;
+  }
+
+  .field{ margin-bottom:22px; max-width:520px; }
+  .field label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    color:#356734;
+    margin-bottom:8px;
+  }
+  .hint{ font-size:12px; color:var(--muted); margin-top:6px; }
+
+  input[type="text"], input[type="date"], input[type="number"], select, textarea{
+    width:100%;
+    background:var(--peach-field);
+    border:1.5px solid #ecdcc2;
+    border-radius:12px;
+    padding:13px 14px;
+    font-family:'Manrope',sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  input:focus, select:focus, textarea:focus{
+    border-color:var(--orange);
+    background:#fffdf8;
+  }
+  textarea{ resize:none; min-height:110px; line-height:1.5; }
+
+  .char-count{ font-size:11.5px; color:var(--muted); margin-top:6px; text-align:right; }
+
+  .pill-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .pill{
+    padding:10px 18px;
+    border-radius:999px;
+    border:1.5px solid #ecdcc2;
+    background:var(--peach-field);
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .pill:hover{ border-color:var(--orange-soft); }
+  .pill.selected{
+    background:#356734;
+    border-color:#356734;
+    color:#fffaf2;
+  }
+
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:520px; }
+
+  /* Passions grid */
+  .tag-grid{ display:flex; flex-wrap:wrap; gap:10px; max-width:640px; }
+  .tag{
+    padding:11px 16px;
+    border-radius:12px;
+    background:var(--orange-tag);
+    border:1.5px solid transparent;
+    font-size:13.5px;
+    font-weight:600;
+    color:#356734;
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .tag:hover{ border-color:var(--orange); }
+  .tag.selected{
+    background:#356734;
+    color:#fffaf2;
+  }
+  .tag-counter{ font-size:12.5px; color:var(--muted); margin-top:16px; }
+
+  /* Photos */
+  .photo-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+    max-width:640px;
+  }
+  .photo-slot{
+    aspect-ratio:3/4;
+    border-radius:16px;
+    border:2px dashed #dcc9a6;
+    background:var(--peach-field);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    color:var(--muted);
+    transition:border-color .2s ease;
+  }
+  .photo-slot:hover{ border-color:var(--orange); }
+  .photo-slot img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  }
+  .photo-slot .badge{
+    position:absolute; top:8px; left:8px;
+    background:#356734; color:#fffaf2;
+    font-size:10.5px; font-weight:700;
+    padding:3px 9px; border-radius:999px;
+    letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .photo-plus{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--orange-soft);
+    color:#356734;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px; font-weight:700;
+  }
+  .photo-slot span.label{ font-size:12px; font-weight:600; }
+  .photo-slot input{ display:none; }
+  .photo-remove{
+    position:absolute; top:8px; right:8px;
+    width:22px;height:22px;border-radius:50%;
+    background:rgba(28,56,41,0.75); color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px; cursor:pointer;
+  }
+
+  /* Footer bar */
+  .content-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 48px;
+    border-top:1px solid #eee0cb;
+    background:var(--peach-card);
+  }
+  .progress-text{ font-size:12.5px; color:var(--muted); font-weight:600; }
+  .btn{
+    border:none; border-radius:999px;
+    padding:13px 26px;
+    font-family:'Manrope',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    transition:transform .15s ease, background .2s ease;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn-primary{ background:var(--green-deep); color:#fffaf2; }
+  .btn-primary:hover{ background:var(--green-mid); }
+  .btn-ghost{ background:transparent; color:var(--muted); }
+  .btn-ghost:hover{ color:var(--ink); }
+
+  .review-group{ margin-bottom:26px; max-width:640px; }
+  .review-group h3{
+    font-family:'Fraunces',serif;
+    font-size:16px; font-weight:600;
+    color:var(--green-deep);
+    margin:0 0 10px 0;
+    padding-bottom:8px;
+    border-bottom:1px solid #eee0cb;
+  }
+  .review-row{
+    display:flex; justify-content:space-between; gap:20px;
+    padding:7px 0;
+    font-size:13.5px;
+  }
+  .review-row .k{ color:var(--muted); font-weight:600; flex-shrink:0; }
+  .review-row .v{ color:var(--ink); text-align:right; }
+  .review-empty{ color:var(--muted); font-style:italic; font-size:13px; }
+  .review-photos{ display:flex; gap:12px; margin-top:6px; }
+  .review-photos img{
+    width:74px; height:96px; object-fit:cover; border-radius:10px;
+    border:2px solid #eee0cb;
+  }
+  .review-photos .empty-slot{
+    width:74px; height:96px; border-radius:10px;
+    border:2px dashed #dcc9a6;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:var(--muted);
+  }
+
+  @media (max-width:860px){
+    body{ overflow-y:auto; height:auto; }
+    .stage{ grid-template-columns:1fr; height:auto; min-height:100vh; }
+    .sidebar{ flex-direction:row; align-items:center; overflow-x:auto; padding:18px; }
+    .brand,.brand-sub,.sidebar-footer{ display:none; }
+    .nav-steps{ flex-direction:row; }
+    .nav-label span.desc{ display:none; }
+    .content-scroll{ padding:26px 24px; }
+    .content-footer{ padding:14px 24px; }
+    .two-col{ grid-template-columns:1fr; }
+    .photo-grid{ grid-template-columns:repeat(3,1fr); }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ====== SUPABASE CONFIG ======
+  // Replace these two values with your own Supabase project's URL and anon/public key.
+  // Find them in your Supabase dashboard: Project Settings -> API
+  const SUPABASE_URL = 'https://tpweaiounyjzgiasthgv.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwd2VhaW91bnlqemdpYXN0aGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNTg4NzUsImV4cCI6MjA5ODgzNDg3NX0.5fPFgXjq3C-OYuqv0wG4gpRWnNDstOKMgpXVRTUvl7E';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- SIDEBAR NAV -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">J</div>
+      <div class="brand-name">JMingle</div>
+    </div>
+    <div class="brand-sub">Campus Profile Setup</div>
+
+    <nav class="nav-steps">
+      <button class="nav-item active" data-target="overview">
+        <span class="stamp">1</span>
+        <span class="nav-label"><span class="title">Overview</span><span class="desc">About you</span></span>
+      </button>
+      <button class="nav-item" data-target="passions">
+        <span class="stamp">2</span>
+        <span class="nav-label"><span class="title">Passions</span><span class="desc">What you love</span></span>
+      </button>
+      <button class="nav-item" data-target="photos">
+        <span class="stamp">3</span>
+        <span class="nav-label"><span class="title">Photos</span><span class="desc">Show yourself</span></span>
+      </button>
+      <button class="nav-item" data-target="review">
+        <span class="stamp">4</span>
+        <span class="nav-label"><span class="title">Review</span><span class="desc">See what's saved</span></span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Your profile appears as a pinned sticker across the campus tour once submitted.
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="content-scroll">
+
+      <!-- OVERVIEW -->
+      <section class="panel active" id="overview">
+        <div class="eyebrow">Step 1 of 4</div>
+        <h1 class="panel-title">Let's start with the basics</h1>
+        <p class="panel-sub">First impressions matter... unfortunately..</p>
+
+        <div class="field">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" placeholder="e.g. Aarav Mehta">
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob">
+          </div>
+          <div class="field">
+            <label for="campus">Campus / Location</label>
+            <select id="campus">
+              <option value="">Select campus</option>
+              <option>Department of Economics</option>
+              <option>Department of Computer Science</option>
+              <option>Commerce Department</option>
+              <option>Socio Dept</option>
+              <option>Physics Dept</option>
+              <option>Nano Dept</option>
+              <option>Polytechnic Dept</option>
+              <option>Department of Mathematics
+                
+   
+
+</option>
+              <option>Canteen 2</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Gender</label>
+          <div class="pill-row" data-group="gender">
+            <div class="pill">Male</div>
+            <div class="pill">Female</div>
+            <div class="pill">Non-binary</div>
+            <div class="pill">Prefer not to say</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Looking For</label>
+          <div class="pill-row" data-group="lookingfor">
+            <div class="pill">Relationship</div>
+            <div class="pill">Friendship</div>
+            <div class="pill">Casual</div>
+            <div class="pill">Still figuring it out</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label for="education">Education Level</label>
+            <select id="education">
+              <option value="">Select level</option>
+              <option>Bachelors</option>
+              <option>Masters</option>
+              <option>PhD</option>
+              <option>Faculty</option>
+              <option>Staff</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="course">Course / Major</label>
+            <input type="text" id="course" placeholder="e.g. Computer Science">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Height</label>
+          <div style="display:flex; gap:10px; max-width:520px;">
+            <select id="heightFeet" style="flex:1;">
+              <option value="">Feet</option>
+              <option>4'</option>
+              <option>5'</option>
+              <option>6'</option>
+              <option>7'</option>
+            </select>
+            <select id="heightInches" style="flex:1;">
+              <option value="">Inches</option>
+              <option>0"</option>
+              <option>1"</option>
+              <option>2"</option>
+              <option>3"</option>
+              <option>4"</option>
+              <option>5"</option>
+              <option>6"</option>
+              <option>7"</option>
+              <option>8"</option>
+              <option>9"</option>
+              <option>10"</option>
+              <option>11"</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="bio">Bio</label>
+          <textarea id="bio" maxlength="300" placeholder="Tell people a little about yourself..."></textarea>
+          <div class="char-count"><span id="bioCount">0</span>/300</div>
+        </div>
+      </section>
+
+      <!-- PASSIONS -->
+      <section class="panel" id="passions">
+        <div class="eyebrow">Step 2 of 4</div>
+        <h1 class="panel-title">What lights you up?</h1>
+        <p class="panel-sub">Pick up to 5 — these show as tags on your profile sticker.</p>
+
+        <div class="tag-grid" id="tagGrid">
+          <div class="tag">Cricket</div>
+          <div class="tag">Travel</div>
+          <div class="tag">Music</div>
+          <div class="tag">Reading</div>
+          <div class="tag">Fitness</div>
+          <div class="tag">Cooking</div>
+          <div class="tag">Movies</div>
+          <div class="tag">Gaming</div>
+          <div class="tag">Art</div>
+          <div class="tag">Photography</div>
+          <div class="tag">Dancing</div>
+          <div class="tag">Hiking</div>
+          <div class="tag">Yoga</div>
+          <div class="tag">Coffee</div>
+          <div class="tag">Foodie</div>
+          <div class="tag">Tech</div>
+          <div class="tag">Fashion</div>
+          <div class="tag">Pets</div>
+        </div>
+        <div class="tag-counter"><span id="tagCount">0</span>/5 selected</div>
+      </section>
+
+      <!-- PHOTOS -->
+      <section class="panel" id="photos">
+        <div class="eyebrow">Step 3 of 4</div>
+        <h1 class="panel-title">Add your photos</h1>
+        <p class="panel-sub">Upload exactly 3 photos. Your first photo is the main one shown on the map.</p>
+
+        <div class="photo-grid">
+          <label class="photo-slot" for="photo1">
+            <span class="badge">Main</span>
+            <span class="photo-plus">+</span>
+            <span class="label">Photo 1</span>
+            <input type="file" id="photo1" accept="image/*">
+          </label>
+          <label class="photo-slot" for="photo2">
+            <span class="photo-plus">+</span>
+            <span class="label">Photo 2</span>
+            <input type="file" id="photo2" accept="image/*">
+          </label>
+          <label class="photo-slot" for="photo3">
+            <span class="photo-plus">+</span>
+            <span class="label">Photo 3</span>
+            <input type="file" id="photo3" accept="image/*">
+          </label>
+        </div>
+        <div class="hint" style="margin-top:16px;">JPG or PNG. Clear, recent, front-facing photos work best.</div>
+      </section>
+
+      <!-- REVIEW -->
+      <section class="panel" id="review">
+        <div class="eyebrow">Step 4 of 4</div>
+        <h1 class="panel-title">Here's what's saved</h1>
+        <p class="panel-sub"></p>
+
+        <div id="reviewBody"></div>
+
+        <button class="btn btn-ghost" id="clearBtn" style="margin-top:22px; padding-left:0;"></button>
+      </section>
+
+    </div>
+
+    <div class="content-footer">
+      <span class="progress-text" id="progressText">Step 1 of 4</span>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="backBtn">Back</button>
+        <button class="btn btn-primary" id="nextBtn">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'jmingle_profile_data';
+  const steps = ['overview','passions','photos','review'];
+  let currentStep = 0;
+
+  // ====== SUPABASE SYNC SETUP ======
+  const PROFILE_ID_KEY = 'jmingle_profile_id';
+  function getProfileId(){
+    let id = localStorage.getItem(PROFILE_ID_KEY);
+    if(!id){
+      id = (crypto.randomUUID ? crypto.randomUUID() : 'p-' + Date.now() + '-' + Math.random().toString(16).slice(2));
+      localStorage.setItem(PROFILE_ID_KEY, id);
+    }
+    return id;
+  }
+  const profileId = getProfileId();
+  const photoFiles = { photo1: null, photo2: null, photo3: null };
+  const photoUrls = { photo1: null, photo2: null, photo3: null };
+  let syncTimer = null;
+  let syncStatusEl = null;
+
+  function setSyncStatus(text){
+    if(!syncStatusEl){
+      syncStatusEl = document.createElement('div');
+      syncStatusEl.id = 'syncStatus';
+      syncStatusEl.style.cssText = 'font-size:11.5px;color:#6f7d72;margin-top:8px;';
+      const footer = document.querySelector('.content-footer');
+      if(footer) footer.parentNode.insertBefore(syncStatusEl, footer);
+    }
+    syncStatusEl.textContent = text;
+  }
+
+  // Upload a single photo file to the Supabase Storage bucket "image"
+  async function uploadPhotoToSupabase(slotKey, file){
+    try{
+      setSyncStatus('Uploading ' + slotKey + '...');
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `profiles/${profileId}/${slotKey}.${ext}`;
+      const { error: uploadError } = await supabaseClient
+        .storage
+        .from('image')
+        .upload(path, file, { upsert: true, contentType: file.type || 'image/jpeg' });
+      if(uploadError){
+        console.error('Supabase upload error:', uploadError);
+        setSyncStatus('Photo upload failed: ' + uploadError.message);
+        return null;
+      }
+      const { data: publicData } = supabaseClient
+        .storage
+        .from('image')
+        .getPublicUrl(path);
+      photoUrls[slotKey] = publicData ? publicData.publicUrl : null;
+      setSyncStatus('Photo uploaded.');
+      return photoUrls[slotKey];
+    }catch(e){
+      console.error('Upload exception:', e);
+      setSyncStatus('Photo upload failed.');
+      return null;
+    }
+  }
+
+  // Upsert the text fields (and any photo URLs already uploaded) into the "profile" table
+  async function syncProfileToSupabase(){
+    try{
+      const d = collectData();
+      setSyncStatus('Saving...');
+      const row = {
+        id: profileId,
+        fullname: d.fullname || null,
+        dob: d.dob || null,
+        campus: d.campus || null,
+        gender: d.gender || null,
+        lookingfor: d.lookingfor || null,
+        education: d.education || null,
+        course: d.course || null,
+        height_feet: d.heightFeet || null,
+        height_inches: d.heightInches || null,
+        bio: d.bio || null,
+        passions: d.passions || [],
+        photo1_url: photoUrls.photo1,
+        photo2_url: photoUrls.photo2,
+        photo3_url: photoUrls.photo3,
+        updated_at: new Date().toISOString()
+      };
+      const { error } = await supabaseClient.from('profile').upsert(row, { onConflict: 'id' });
+      if(error){
+        console.error('Supabase upsert error:', error);
+        setSyncStatus('Save failed: ' + error.message);
+      } else {
+        setSyncStatus('');
+      }
+    }catch(e){
+      console.error('Sync exception:', e);
+      setSyncStatus('Save failed.');
+    }
+  }
+
+  // Debounce so we don't hit the DB on every keystroke
+  function queueSupabaseSync(){
+    if(syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(syncProfileToSupabase, 900);
+  }
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const progressText = document.getElementById('progressText');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+
+  function goToStep(index){
+    currentStep = index;
+    steps.forEach((id, i) => {
+      document.getElementById(id).classList.toggle('active', i === index);
+      navItems[i].classList.toggle('active', i === index);
+      navItems[i].classList.toggle('done', i < index);
+    });
+    progressText.textContent = `Step ${index+1} of ${steps.length}`;
+    nextBtn.textContent = index === steps.length-1 ? 'Finish' : 'Continue →';
+    backBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
+    if(steps[index] === 'review') renderReview();
+  }
+
+  navItems.forEach((item, i) => {
+    item.addEventListener('click', () => goToStep(i));
+  });
+  nextBtn.addEventListener('click', async () => {
+    if(currentStep < steps.length-1) goToStep(currentStep+1);
+    else {
+      await syncProfileToSupabase();
+      window.location.href = 'intent.html';
+    }
+  });
+  backBtn.addEventListener('click', () => {
+    if(currentStep > 0) goToStep(currentStep-1);
+  });
+
+  // ---------- DATA MODEL ----------
+  function getSelectedPill(group){
+    const el = document.querySelector(`.pill-row[data-group="${group}"] .pill.selected`);
+    return el ? el.textContent : '';
+  }
+  function setSelectedPill(group, value){
+    if(!value) return;
+    document.querySelectorAll(`.pill-row[data-group="${group}"] .pill`).forEach(p => {
+      p.classList.toggle('selected', p.textContent === value);
+    });
+  }
+  function collectData(){
+    return {
+      fullname: document.getElementById('fullname').value,
+      dob: document.getElementById('dob').value,
+      campus: document.getElementById('campus').value,
+      gender: getSelectedPill('gender'),
+      lookingfor: getSelectedPill('lookingfor'),
+      education: document.getElementById('education').value,
+      course: document.getElementById('course').value,
+      heightFeet: document.getElementById('heightFeet').value,
+      heightInches: document.getElementById('heightInches').value,
+      bio: document.getElementById('bio').value,
+      passions: Array.from(document.querySelectorAll('#tagGrid .tag.selected')).map(t => t.textContent),
+      photos: ['photo1','photo2','photo3'].map(id => {
+        const img = document.querySelector(`#${id}`).closest('.photo-slot').querySelector('img');
+        return img ? img.src : null;
+      })
+    };
+  }
+  function saveData(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData())); }
+    catch(e){ console.warn('Could not save to local storage', e); }
+    queueSupabaseSync();
+  }
+  function loadData(){
+    let data;
+    try{ data = JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){ data = null; }
+    if(!data) return;
+
+    document.getElementById('fullname').value = data.fullname || '';
+    document.getElementById('dob').value = data.dob || '';
+    document.getElementById('campus').value = data.campus || '';
+    setSelectedPill('gender', data.gender);
+    setSelectedPill('lookingfor', data.lookingfor);
+    document.getElementById('education').value = data.education || '';
+    document.getElementById('course').value = data.course || '';
+    document.getElementById('heightFeet').value = data.heightFeet || '';
+    document.getElementById('heightInches').value = data.heightInches || '';
+    document.getElementById('bio').value = data.bio || '';
+    bioCount.textContent = document.getElementById('bio').value.length;
+
+    (data.passions || []).forEach(name => {
+      const tag = Array.from(document.querySelectorAll('#tagGrid .tag')).find(t => t.textContent === name);
+      if(tag) tag.classList.add('selected');
+    });
+    tagCount.textContent = document.querySelectorAll('#tagGrid .tag.selected').length;
+
+    (data.photos || []).forEach((src, i) => {
+      if(!src) return;
+      const input = document.getElementById('photo' + (i+1));
+      placePhotoPreview(input, src);
+    });
+  }
+
+  function renderReview(){
+    const d = collectData();
+    const body = document.getElementById('reviewBody');
+    const val = v => v ? v : '<span class="review-empty">Not filled in</span>';
+    body.innerHTML = `
+      <div class="review-group">
+        <h3>Overview</h3>
+        <div class="review-row"><span class="k">Full Name</span><span class="v">${val(d.fullname)}</span></div>
+        <div class="review-row"><span class="k">Date of Birth</span><span class="v">${val(d.dob)}</span></div>
+        <div class="review-row"><span class="k">Campus / Location</span><span class="v">${val(d.campus)}</span></div>
+        <div class="review-row"><span class="k">Gender</span><span class="v">${val(d.gender)}</span></div>
+        <div class="review-row"><span class="k">Looking For</span><span class="v">${val(d.lookingfor)}</span></div>
+        <div class="review-row"><span class="k">Education Level</span><span class="v">${val(d.education)}</span></div>
+        <div class="review-row"><span class="k">Course / Major</span><span class="v">${val(d.course)}</span></div>
+        <div class="review-row"><span class="k">Height</span><span class="v">${val((d.heightFeet||d.heightInches) ? `${d.heightFeet||''} ${d.heightInches||''}`.trim() : '')}</span></div>
+      </div>
+      <div class="review-group">
+        <h3>Bio</h3>
+        <div class="review-row"><span class="v" style="text-align:left;">${d.bio ? d.bio : '<span class=\"review-empty\">Not filled in</span>'}</span></div>
+      </div>
+      <div class="review-group">
+        <h3>Passions</h3>
+        <div class="review-row"><span class="v" style="text-align:left;">${d.passions.length ? d.passions.join(', ') : '<span class=\"review-empty\">None selected</span>'}</span></div>
+      </div>
+      <div class="review-group">
+        <h3>Photos</h3>
+        <div class="review-photos">
+          ${[0,1,2].map(i => d.photos[i]
+            ? `<img src="${d.photos[i]}">`
+            : `<div class="empty-slot">Photo ${i+1}</div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if(confirm('Clear all saved profile data from this browser?')){
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  });
+
+  // ---------- INTERACTIONS ----------
+  // Single-select pill groups
+  document.querySelectorAll('.pill-row').forEach(row => {
+    row.addEventListener('click', e => {
+      const pill = e.target.closest('.pill');
+      if(!pill) return;
+      row.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      saveData();
+    });
+  });
+
+  // Passion tags, max 5
+  const tagGrid = document.getElementById('tagGrid');
+  const tagCount = document.getElementById('tagCount');
+  tagGrid.addEventListener('click', e => {
+    const tag = e.target.closest('.tag');
+    if(!tag) return;
+    const selected = tagGrid.querySelectorAll('.tag.selected').length;
+    if(tag.classList.contains('selected')){
+      tag.classList.remove('selected');
+    } else if(selected < 5){
+      tag.classList.add('selected');
+    }
+    tagCount.textContent = tagGrid.querySelectorAll('.tag.selected').length;
+    saveData();
+  });
+
+  // Bio character counter
+  const bioCount = document.getElementById('bioCount');
+  document.getElementById('bio').addEventListener('input', () => {
+    bioCount.textContent = document.getElementById('bio').value.length;
+  });
+
+  // Text/date/select fields
+  ['fullname','dob','campus','course','education','heightFeet','heightInches','bio'].forEach(id => {
+    document.getElementById(id).addEventListener('input', saveData);
+    document.getElementById(id).addEventListener('change', saveData);
+  });
+
+  // Photo preview
+  function placePhotoPreview(input, src){
+    const slot = input.closest('.photo-slot');
+    slot.querySelectorAll('img, .photo-remove').forEach(el => el.remove());
+    const img = document.createElement('img');
+    img.src = src;
+    slot.appendChild(img);
+    const badge = slot.querySelector('.badge');
+    if(badge) slot.appendChild(badge);
+    const remove = document.createElement('span');
+    remove.className = 'photo-remove';
+    remove.textContent = '×';
+    remove.onclick = (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      img.remove();
+      remove.remove();
+      input.value = '';
+      photoFiles[input.id] = null;
+      photoUrls[input.id] = null;
+      saveData();
+    };
+    slot.appendChild(remove);
+  }
+  ['photo1','photo2','photo3'].forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener('change', async () => {
+      const file = input.files[0];
+      if(!file) return;
+      photoFiles[id] = file;
+      const reader = new FileReader();
+      reader.onload = async e => {
+        placePhotoPreview(input, e.target.result);
+        saveData();
+        // Upload the actual file to the Supabase "image" bucket, then upsert
+        // the resulting URL into the "profile" table.
+        await uploadPhotoToSupabase(id, file);
+        syncProfileToSupabase();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // Pull any existing row for this profileId from Supabase (e.g. if the
+  // person set this up on a different browser) and merge it in.
+  async function loadFromSupabase(){
+    try{
+      const { data, error } = await supabaseClient
+        .from('profile')
+        .select('*')
+        .eq('id', profileId)
+        .maybeSingle();
+      if(error){ console.warn('Supabase load error:', error); return; }
+      if(!data) return;
+
+      document.getElementById('fullname').value = data.fullname || document.getElementById('fullname').value;
+      document.getElementById('dob').value = data.dob || document.getElementById('dob').value;
+      document.getElementById('campus').value = data.campus || document.getElementById('campus').value;
+      setSelectedPill('gender', data.gender);
+      setSelectedPill('lookingfor', data.lookingfor);
+      document.getElementById('education').value = data.education || document.getElementById('education').value;
+      document.getElementById('course').value = data.course || document.getElementById('course').value;
+      document.getElementById('heightFeet').value = data.height_feet || document.getElementById('heightFeet').value;
+      document.getElementById('heightInches').value = data.height_inches || document.getElementById('heightInches').value;
+      document.getElementById('bio').value = data.bio || document.getElementById('bio').value;
+      bioCount.textContent = document.getElementById('bio').value.length;
+
+      (data.passions || []).forEach(name => {
+        const tag = Array.from(document.querySelectorAll('#tagGrid .tag')).find(t => t.textContent === name);
+        if(tag) tag.classList.add('selected');
+      });
+      tagCount.textContent = document.querySelectorAll('#tagGrid .tag.selected').length;
+
+      ['photo1','photo2','photo3'].forEach((key, i) => {
+        const url = data[`${key}_url`];
+        if(url){
+          photoUrls[key] = url;
+          placePhotoPreview(document.getElementById(key), url);
+        }
+      });
+      saveData();
+    }catch(e){
+      console.warn('Could not load profile from Supabase', e);
+    }
+  }
+
+  // ---------- INIT ----------
+  loadData();
+  loadFromSupabase();
+  goToStep(0);
+</script>
+
+</body>
+</html>

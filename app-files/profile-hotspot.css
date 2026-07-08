@@ -1,0 +1,737 @@
+/* Profile sticker hotspot — fancy floating matchmaking card,
+   pinned at a fixed yaw/pitch in a scene. */
+
+/* Font stack: Plus Jakarta Sans as primary, with a sane system fallback
+   chain so text still looks intentional if the webfont fails to load. */
+:root {
+  --phs-font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont,
+              'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Outer wrapper: ONLY handles anchoring to the pin point.
+   No animation here on purpose, so it doesn't fight with Marzipano's
+   own hotspot positioning transform. */
+.profile-hotspot {
+  transform: translate(-50%, -100%);
+  cursor: default;
+  font-family: var(--phs-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Inner card: this is what floats up and down. */
+.profile-hotspot-card {
+  width: 210px;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35), 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: profileHotspotFloat 3.6s ease-in-out infinite;
+  transition: transform 0.15s ease;
+}
+
+@keyframes profileHotspotFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-hotspot-card { animation: none; }
+}
+
+/* ---- image section ---- */
+.profile-hotspot-imgwrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.profile-hotspot-imgwrap.is-swapping {
+  opacity: 0;
+}
+
+.profile-hotspot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-hotspot-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.35), transparent 55%);
+  pointer-events: none;
+}
+
+.profile-hotspot-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #256029;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: var(--phs-font);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.profile-hotspot-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: profileHotspotPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes profileHotspotPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+.profile-hotspot-counter {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--phs-font);
+  font-size: 9px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.profile-hotspot-matched-flash {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f84328;
+  color: #fff;
+  font-family: var(--phs-font);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.profile-hotspot-matched-flash.is-visible {
+  opacity: 1;
+}
+
+/* ---- body section ---- */
+.profile-hotspot-body {
+  padding: 11px 13px 13px;
+  transition: opacity 0.2s ease;
+}
+
+.profile-hotspot-body.is-swapping {
+  opacity: 0;
+}
+
+/* Name: the primary hierarchy anchor. Slightly larger, tighter tracking
+   than an all-caps label needs, so it reads as a heading rather than a tag. */
+.profile-hotspot-name {
+  margin: 0;
+  font-family: var(--phs-font);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #16171a;
+  letter-spacing: -0.01em;
+}
+
+/* Meta: secondary line. Normal case (not uppercase) reads calmer and more
+   editorial next to a bold uppercase name — avoids two competing shouty lines. */
+.profile-hotspot-meta {
+  margin: 3px 0 0;
+  font-family: var(--phs-font);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #8a8a8f;
+  letter-spacing: 0.01em;
+}
+
+.profile-hotspot-bio {
+  margin: 7px 0 0;
+  font-family: var(--phs-font);
+  font-size: 11px;
+  font-weight: 450;
+  line-height: 1.45;
+  color: #40414a;
+  letter-spacing: 0.002em;
+}
+
+.profile-hotspot-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.profile-hotspot-tag {
+  padding: 3px 8px;
+  background: #f6f6f8;
+  border: 1px solid #ececef;
+  border-radius: 999px;
+  font-family: var(--phs-font);
+  font-size: 9px;
+  font-weight: 700;
+  color: #5c5d66;
+  letter-spacing: 0.01em;
+}
+
+.profile-hotspot-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.profile-hotspot-btn {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 0;
+  font-family: var(--phs-font);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  color: #fff;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+.profile-hotspot-btn:active {
+  transform: scale(0.96);
+}
+
+.profile-hotspot-btn-pass {
+  background: #1f4f24; /* dark green */
+}
+
+.profile-hotspot-btn-pass:hover {
+  filter: brightness(1.1);
+}
+
+.profile-hotspot-btn-match {
+  background: #f84328; /* light orange */
+  color: white;
+}
+
+.profile-hotspot-btn-match:hover {
+  filter: brightness(1.05);
+}
+
+/* Mobile: slightly smaller so it doesn't dominate small screens */
+body.mobile .profile-hotspot-card {
+  width: 160px;
+}
+
+body.mobile .profile-hotspot-img {
+  max-height: 170px;
+}
+
+body.mobile .profile-hotspot-name {
+  font-size: 13px;
+}
+
+body.mobile .profile-hotspot-meta {
+  font-size: 9.5px;
+}
+
+body.mobile .profile-hotspot-bio {
+  font-size: 10px;
+}
+
+body.mobile .profile-hotspot-btn {
+  font-size: 9px;
+  padding: 7px 0;
+}
+/* ==========================================
+   MATCHES PANEL — shows distinct match count + clickable names
+   ========================================== */
+
+.matches-panel {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  min-width: 220px;
+  max-width: 340px;
+  padding: 14px 22px;
+
+  background: rgba(20, 18, 28, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  color: #fff;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  text-align: center;
+}
+
+.matches-panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #ff5c8a;
+  margin-bottom: 4px;
+}
+
+.matches-panel-count {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.matches-panel-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.matches-panel-item {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.matches-panel-item:hover {
+  background: rgba(255, 92, 138, 0.35);
+}
+
+/* ==========================================
+   MATCHES PANEL — shows distinct match count + clickable names
+   ========================================== */
+
+.matches-panel {
+  position: fixed;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  z-index: 9999;
+
+  min-width: 160px;
+  max-width: 200px;
+  padding: 12px 16px;
+
+  background: rgba(20, 18, 28, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  color: #fff;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  text-align: center;
+}
+
+.matches-panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #ff5c8a;
+  margin-bottom: 4px;
+}
+
+.matches-panel-count {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.matches-panel-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.matches-panel-item {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.matches-panel-item:hover {
+  background: rgba(255, 92, 138, 0.35);
+}
+/* ==========================================
+   MATCHES PANEL — shows distinct match count + clickable names
+   ========================================== */
+
+.matches-panel {
+  position: fixed;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  z-index: 9999;
+
+  min-width: 160px;
+  max-width: 200px;
+  padding: 12px 16px;
+
+  background: rgba(20, 18, 28, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  color: #fff;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  text-align: center;
+}
+
+.matches-panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #ff5c8a;
+  margin-bottom: 4px;
+}
+
+.matches-panel-count {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.matches-panel-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.matches-panel-item {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.matches-panel-item:hover {
+  background: rgba(255, 92, 138, 0.35);
+}
+
+/* Panel sits at the left, vertically centered. To move it back to the
+   top-center instead, swap .matches-panel's top/left/transform for:
+   top: 20px; left: 50%; transform: translateX(-50%);
+*/
+
+
+/* ==========================================
+   MATCH POPUP — opens when a name in Matches is clicked
+   Has 3 internal views: options, profile, chat
+   ========================================== */
+
+.match-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.match-popup-overlay.is-visible {
+  display: flex;
+}
+
+.match-popup {
+  position: relative;
+  width: 160px;
+  max-width: 75vw;
+  max-height: 50vh;
+  background: #1c1a22;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.match-popup-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.match-popup-close:hover { opacity: 1; }
+
+/* ---- options view ---- */
+.match-popup-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 4px;
+}
+
+.match-popup-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ff5c8a;
+  margin-bottom: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 92, 138, 0.18);
+  color: #ff5c8a;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.match-popup-name {
+  font-size: 13px;
+  margin: 0 0 2px;
+}
+
+.match-popup-sub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 8px;
+}
+
+.match-popup-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.match-popup-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+}
+
+.match-popup-btn-profile {
+  background: rgba(255, 255, 255, 0.12);
+}
+.match-popup-btn-profile:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.match-popup-btn-chat {
+  background: #ff5c8a;
+}
+.match-popup-btn-chat:hover {
+  background: #ff3d76;
+}
+
+/* ---- shared back button ---- */
+.match-popup-back {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 0 10px;
+  opacity: 0.8;
+}
+.match-popup-back:hover { opacity: 1; }
+
+/* ---- profile view ---- */
+.match-popup-profile-view {
+  text-align: center;
+}
+
+.match-popup-profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 92, 138, 0.18);
+  color: #ff5c8a;
+  border: 2px solid #ff5c8a;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.match-popup-profile-view h2 {
+  margin: 0 0 2px;
+  font-size: 13px;
+}
+
+.match-popup-profile-meta {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+  margin: 0 0 6px;
+}
+
+.match-popup-profile-bio {
+  font-size: 11px;
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+.match-popup-profile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.match-popup-profile-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+/* ---- chat view ---- */
+.match-popup-chat-view {
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+}
+
+.match-popup-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.match-popup-chat-name {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.match-popup-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 2px;
+}
+
+.match-popup-chat-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  margin: auto;
+}
+
+.match-popup-bubble {
+  max-width: 85%;
+  padding: 5px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  line-height: 1.25;
+  word-wrap: break-word;
+}
+
+.match-popup-bubble-me {
+  align-self: flex-end;
+  background: #ff5c8a;
+  border-bottom-right-radius: 4px;
+}
+
+.match-popup-bubble-them {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.12);
+  border-bottom-left-radius: 4px;
+}
+
+.match-popup-chat-input-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.match-popup-chat-input {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  min-width: 0;
+}
+.match-popup-chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+.match-popup-chat-input:focus {
+  outline: 2px solid #ff5c8a;
+}
+
+.match-popup-chat-send {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #ff5c8a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 10px;
+  cursor: pointer;
+}
+.match-popup-chat-send:hover {
+  background: #ff3d76;
+}
