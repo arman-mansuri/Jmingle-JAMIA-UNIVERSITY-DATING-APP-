@@ -100,16 +100,16 @@ var STATIC_PROFILES = [
     image: "profile/6.png",
     location: "Department of Economics"
   },
-  {
+    {
     id: 7,
-    name: "Nadia Hassan",
-    age: 22,
+    name: "Sanno luckhnawi",
+    age: 24,
     gender: "Female",
     educationLevel: "Masters",
     department: "Department of Economics",
-    height: "5'4\"",
-    interests: ["Reading", "Photography", "Travel", "Music"],
-    bio: "I’m a simple Muslim girl who loves reading and capturing moments. Looking for a serious halal relationship.",
+    height: "5'2\"",
+    interests: ["Music", "Photography", "Travel", "Music"],
+    bio: " From Lucknow to Delhi to flying the world . Tunday Kebab lover? We’re already on the same wavelength",
     image: "profile/7.png",
     location: "Department of Economics"
   },
