@@ -113,7 +113,19 @@ var profiles = [
     bio: "Dreamer, artist, and deep conversationalist. Seeking someone who appreciates the beauty in small things.",
     image: "profile/8.png",
     location: "Department of Economics"
-  },
+  },{
+    id: 9,
+    name: "Sanno luckhnawi",
+    age: 19,
+    gender: "Female",
+    educationLevel: "Bachelors",
+    department: "Department of Economics",
+    height: "5'4\"",
+    interests: ["Photography", "Art", "Travel", "Philosophy"],
+    bio: "Dreamer, artist, and deep conversationalist. Seeking someone who appreciates the beauty in small things.",
+    image: "profile/8.png",
+    location: "Department of Economics"
+  }
   // =============================================
   // Department of Computer Science (6 profiles)
   // =============================================
