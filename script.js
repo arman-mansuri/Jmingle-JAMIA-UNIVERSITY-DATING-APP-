@@ -16,9 +16,22 @@ let currentProgress = 0;
 let totalFrames = 0;
 let rafId = null;
 
+// Detect low-power devices so we can reduce how often we ask the decoder
+// to seek. Mobile SoCs choke on frequent full-frame decodes far more than
+// desktop GPUs do, so we throttle seek frequency (not scroll responsiveness)
+// on mobile.
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
 // How quickly the video "catches up" to your scroll position.
 // Lower = smoother/more glide, higher = snappier/more 1:1 with scroll.
 const SMOOTHING = 0.12;
+
+// Minimum time (ms) between actual video.currentTime writes. 0 on desktop
+// (every rAF frame is fine, ~60/sec). On mobile we cap this to roughly
+// 24-30 seeks/sec so the decoder isn't asked to produce more frames per
+// second than the device can realistically decode.
+const SEEK_THROTTLE_MS = isMobile ? 35 : 0;
+let lastSeekTime = 0;
 
 video.addEventListener("loadedmetadata", () => {
     const fps = 50;
@@ -42,17 +55,23 @@ video.addEventListener("loadedmetadata", () => {
     rafId = requestAnimationFrame(renderLoop);
 });
 
-function renderLoop() {
+function renderLoop(now) {
     // Ease current progress toward target progress (lerp)
     currentProgress += (targetProgress - currentProgress) * SMOOTHING;
 
     const progress = currentProgress;
 
-    // Video scrub
-    const frame = Math.floor(progress * totalFrames);
-    const targetTime = frame / 50;
-    if (Math.abs(video.currentTime - targetTime) > 1 / 100) {
-        video.currentTime = targetTime;
+    // Video scrub — throttled on mobile so we don't overwhelm the decoder.
+    // The visual easing above still runs every frame (60fps feel), only
+    // the actual expensive video.currentTime write is rate-limited.
+    const shouldSeek = !SEEK_THROTTLE_MS || !now || now - lastSeekTime >= SEEK_THROTTLE_MS;
+    if (shouldSeek) {
+        const frame = Math.floor(progress * totalFrames);
+        const targetTime = frame / 50;
+        if (Math.abs(video.currentTime - targetTime) > 1 / 100) {
+            video.currentTime = targetTime;
+            lastSeekTime = now || performance.now();
+        }
     }
 
     // Image fade
