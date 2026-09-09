@@ -151,9 +151,7 @@
     margin: auto;
     position: relative;
     overflow: hidden;
-}
-
-@media (max-width: 768px) {
+}@media (max-width: 768px) {
     .aspect-frame {
         aspect-ratio: unset;
         width: 100vw;
@@ -163,6 +161,10 @@
     .option-circle {
         width: min(260px, 70vw) !important;
         height: min(260px, 70vw) !important;
+    }
+
+    main > div {
+        flex-wrap: wrap;
     }
 }
     </style>
