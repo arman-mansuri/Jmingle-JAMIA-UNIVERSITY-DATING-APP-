@@ -158,14 +158,26 @@
         height: 100dvh;
     }
 
-    main > div:last-child {
+    main > div.flex.flex-row {
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
     }
 
     .option-circle {
-        width: min(260px, 70vw) !important;
-        height: min(260px, 70vw) !important;
+        width: 200px !important;
+        height: 200px !important;
+        padding: 12px !important;
+    }
+
+    .option-circle .material-symbols-outlined {
+        font-size: 42px !important;
+    }
+
+    main {
+        justify-content: flex-start !important;
+        overflow-y: auto !important;
+        padding-top: 40px !important;
+        padding-bottom: 40px !important;
     }
 }
     </style>
