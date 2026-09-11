@@ -988,6 +988,53 @@ var LikesStore = (function() {
 })();
 
 // ---------------------------------------------
+// LikeCountsStore — total likes RECEIVED per profile (aggregate only)
+//
+// Backed by the like_counts() RPC, which returns just totals — never the
+// identities of who liked whom — so surfacing these numbers does not weaken the
+// "never reveal your likers" rule the rest of the app follows. Reading is
+// public, so this works even when anonymous sign-in is unavailable.
+// ---------------------------------------------
+var LikeCountsStore = (function() {
+  var map = {};
+  var listeners = [];
+
+  function notify() {
+    listeners.forEach(function(fn) { fn(map); });
+  }
+
+  function load() {
+    return Mingle.likeCounts()
+      .then(function(rows) {
+        var next = {};
+        rows.forEach(function(row) {
+          next[row.profile_id] = Number(row.likes) || 0;
+        });
+        map = next;
+        notify();
+        return map;
+      })
+      .catch(function(err) {
+        console.error('Could not load like counts:', err);
+        return map;
+      });
+  }
+
+  return {
+    load: load,
+    get: function(realId) { return (realId && map[realId]) || 0; },
+    // Optimistic increment so a like you just sent shows up instantly, before
+    // the next server refresh confirms it.
+    bump: function(realId) {
+      if (!realId) return;
+      map[realId] = (map[realId] || 0) + 1;
+      notify();
+    },
+    onChange: function(fn) { listeners.push(fn); }
+  };
+})();
+
+// ---------------------------------------------
 // ChatStore — messages per matched profile, persisted
 // ---------------------------------------------
 var ChatStore = (function() {
@@ -1357,6 +1404,16 @@ function createProfileStickerElement(profileList) {
   var counter = document.createElement('div');
   counter.classList.add('profile-hotspot-counter');
 
+  // Total likes this profile has received (aggregate only — see LikeCountsStore).
+  var likesPill = document.createElement('div');
+  likesPill.classList.add('profile-hotspot-likes');
+  var likesHeart = document.createElement('span');
+  likesHeart.classList.add('profile-hotspot-likes-heart');
+  likesHeart.textContent = '♥';
+  var likesText = document.createElement('span');
+  likesPill.appendChild(likesHeart);
+  likesPill.appendChild(likesText);
+
   var matchedFlash = document.createElement('div');
   matchedFlash.classList.add('profile-hotspot-matched-flash');
   matchedFlash.textContent = "It's a match!";
@@ -1365,6 +1422,7 @@ function createProfileStickerElement(profileList) {
   imgWrap.appendChild(gradient);
   imgWrap.appendChild(badge);
   imgWrap.appendChild(counter);
+  imgWrap.appendChild(likesPill);
   imgWrap.appendChild(matchedFlash);
 
   var body = document.createElement('div');
@@ -1441,6 +1499,11 @@ function createProfileStickerElement(profileList) {
     matchBtn.textContent = 'Match';
   }
 
+  function renderLikes(p) {
+    var n = LikeCountsStore.get(p.realId);
+    likesText.textContent = n + (n === 1 ? ' like' : ' likes');
+  }
+
   function render() {
     var p = profileList[index];
     img.src = p.image;
@@ -1451,6 +1514,7 @@ function createProfileStickerElement(profileList) {
     counter.textContent = (index + 1) + ' / ' + profileList.length;
 
     renderMatchBtn(p);
+    renderLikes(p);
 
     tags.innerHTML = '';
     (p.interests || []).slice(0, 3).forEach(function(interest) {
@@ -1490,6 +1554,11 @@ function createProfileStickerElement(profileList) {
 
     Mingle.likeProfile(p.realId)
       .then(function(result) {
+        // A new like just landed on this profile — reflect it in the count
+        // immediately. `alreadyLiked` means it was counted on an earlier visit.
+        if (!result.alreadyLiked) {
+          LikeCountsStore.bump(p.realId);
+        }
         // "It's a match!" now means exactly that: they had already liked back,
         // and the database created the match.
         if (result.matched) {
@@ -1515,6 +1584,12 @@ function createProfileStickerElement(profileList) {
   var eventList = ['touchstart', 'touchmove', 'touchend', 'touchcancel', 'wheel', 'mousewheel'];
   eventList.forEach(function(evt) {
     anchor.addEventListener(evt, function(e) { e.stopPropagation(); });
+  });
+
+  // Keep the visible card's like count fresh when the store changes (a like
+  // lands, or a background refresh brings newer totals).
+  LikeCountsStore.onChange(function() {
+    renderLikes(profileList[index]);
   });
 
   render();
@@ -1576,7 +1651,12 @@ function initProfileHotspots(scenes) {
       console.error('Anonymous session unavailable — liking disabled:', err);
     });
 
-  return Promise.all([profilesPromise, identityPromise])
+  // Aggregate like counts are public too, so they load alongside profiles and
+  // never block on identity. Loading before setupProfileHotspots() means the
+  // very first render already shows real numbers.
+  var countsPromise = LikeCountsStore.load();
+
+  return Promise.all([profilesPromise, identityPromise, countsPromise])
     .then(function(results) {
       profiles = STATIC_PROFILES.concat(results[0] || []);
       setupProfileHotspots(scenes);

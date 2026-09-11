@@ -112,6 +112,30 @@
   letter-spacing: 0.02em;
 }
 
+.profile-hotspot-likes {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(248, 67, 40, 0.92);
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: var(--phs-font);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.profile-hotspot-likes-heart {
+  font-size: 10px;
+  line-height: 1;
+}
+
 .profile-hotspot-matched-flash {
   position: absolute;
   inset: 0;

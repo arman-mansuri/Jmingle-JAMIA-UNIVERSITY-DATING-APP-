@@ -159,6 +159,21 @@ var Mingle = (function() {
     return result.data || [];
   }
 
+  // Total likes RECEIVED per profile. The like_counts() RPC returns only
+  // aggregate totals — never who liked whom — so this cannot be used to unmask
+  // your likers; it just says how many there are. Reading is public (like
+  // reading profiles), so it must NOT depend on identity: counts show whether
+  // or not anonymous sign-in succeeds.
+  async function likeCounts() {
+    var result = await client.rpc('like_counts');
+
+    if (result.error) {
+      console.warn('Could not load like counts:', result.error.message);
+      return [];
+    }
+    return result.data || [];
+  }
+
   return {
     client: client,
     URL: SUPABASE_URL,
@@ -167,6 +182,7 @@ var Mingle = (function() {
     userId: function() { return uid; },
     likeProfile: likeProfile,
     myLikes: myLikes,
-    myMatches: myMatches
+    myMatches: myMatches,
+    likeCounts: likeCounts
   };
 })();
