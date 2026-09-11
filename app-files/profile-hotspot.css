@@ -237,6 +237,30 @@
   filter: brightness(1.05);
 }
 
+/* Demo profiles have no real user behind them, so they can't be liked. */
+.profile-hotspot-btn.is-disabled,
+.profile-hotspot-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.profile-hotspot-btn.is-disabled:hover,
+.profile-hotspot-btn:disabled:hover {
+  filter: none;
+}
+
+.profile-hotspot-btn.is-disabled:active,
+.profile-hotspot-btn:disabled:active {
+  transform: none;
+}
+
+/* Already liked — waiting to see if they like back. */
+.profile-hotspot-btn-match.is-liked {
+  background: #1f4f24;
+  opacity: 1;
+  cursor: default;
+}
+
 /* Mobile: slightly smaller so it doesn't dominate small screens */
 body.mobile .profile-hotspot-card {
   width: 160px;

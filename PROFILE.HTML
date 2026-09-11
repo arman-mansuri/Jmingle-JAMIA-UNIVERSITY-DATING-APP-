@@ -396,13 +396,12 @@
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app-files/mingle-identity.js"></script>
 <script>
   // ====== SUPABASE CONFIG ======
-  // Replace these two values with your own Supabase project's URL and anon/public key.
-  // Find them in your Supabase dashboard: Project Settings -> API
-  const SUPABASE_URL = 'https://tpweaiounyjzgiasthgv.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwd2VhaW91bnlqemdpYXN0aGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNTg4NzUsImV4cCI6MjA5ODgzNDg3NX0.5fPFgXjq3C-OYuqv0wG4gpRWnNDstOKMgpXVRTUvl7E';
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // The shared client and the anonymous identity both live in
+  // app-files/mingle-identity.js, so the whole site uses one auth session.
+  const supabaseClient = Mingle.client;
 </script>
 </head>
 <body>
@@ -641,16 +640,18 @@
   let currentStep = 0;
 
   // ====== SUPABASE SYNC SETUP ======
-  const PROFILE_ID_KEY = 'jmingle_profile_id';
-  function getProfileId(){
-    let id = localStorage.getItem(PROFILE_ID_KEY);
-    if(!id){
-      id = (crypto.randomUUID ? crypto.randomUUID() : 'p-' + Date.now() + '-' + Math.random().toString(16).slice(2));
-      localStorage.setItem(PROFILE_ID_KEY, id);
-    }
-    return id;
-  }
-  const profileId = getProfileId();
+  // The profile's primary key IS this browser's anonymous user id, so a row
+  // can only ever be created or edited by the person it belongs to. No signup,
+  // no login — the id comes from the Supabase session established by
+  // mingle-identity.js.
+  let profileId = null;
+  const identityReady = Mingle.ready()
+    .then(id => { profileId = id; return id; })
+    .catch(err => {
+      console.error('Could not establish an anonymous identity:', err);
+      setSyncStatus('Offline — your profile will not be saved.');
+      throw err;
+    });
   const photoFiles = { photo1: null, photo2: null, photo3: null };
   const photoUrls = { photo1: null, photo2: null, photo3: null };
   let syncTimer = null;
@@ -670,6 +671,7 @@
   // Upload a single photo file to the Supabase Storage bucket "image"
   async function uploadPhotoToSupabase(slotKey, file){
     try{
+      await identityReady;
       setSyncStatus('Uploading ' + slotKey + '...');
       const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
       const path = `profiles/${profileId}/${slotKey}.${ext}`;
@@ -699,6 +701,7 @@
   // Upsert the text fields (and any photo URLs already uploaded) into the "profile" table
   async function syncProfileToSupabase(){
     try{
+      await identityReady;
       const d = collectData();
       setSyncStatus('Saving...');
       const row = {
@@ -964,6 +967,7 @@
   // person set this up on a different browser) and merge it in.
   async function loadFromSupabase(){
     try{
+      await identityReady;
       const { data, error } = await supabaseClient
         .from('profile')
         .select('*')

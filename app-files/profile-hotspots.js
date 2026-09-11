@@ -12,8 +12,9 @@
 // ------------------------------------------------------------------
 // SUPABASE CONFIG
 // ------------------------------------------------------------------
-var SUPABASE_URL = 'https://tpweaiounyjzgiasthgv.supabase.co';
-var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwd2VhaW91bnlqemdpYXN0aGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNTg4NzUsImV4cCI6MjA5ODgzNDg3NX0.5fPFgXjq3C-OYuqv0wG4gpRWnNDstOKMgpXVRTUvl7E';
+// Single source of truth is mingle-identity.js, which index.html loads first.
+var SUPABASE_URL = Mingle.URL;
+var SUPABASE_ANON_KEY = Mingle.ANON_KEY;
 var SUPABASE_TABLE = 'profile';
 var STORAGE_BUCKET = 'image'; // bucket that holds the photo files
 
@@ -849,9 +850,16 @@ function parsePassions(value) {
 // Converts one raw Supabase row into the shape createProfileStickerElement
 // / MatchPopup / etc. expect. Prefixes id with "sb-" so it can never
 // collide with a STATIC_PROFILES numeric id.
+//
+// `realId` is the untouched primary key, which is also the owning anonymous
+// user's id — that is what likes and matches are recorded against. `isReal`
+// separates these from STATIC_PROFILES, which have nobody behind them and so
+// can never like anyone back.
 function mapSupabaseRowToProfile(row) {
   return {
     id: 'sb-' + row.id,
+    realId: row.id,
+    isReal: true,
     name: row.fullname,
     age: calculateAge(row.dob),
     gender: row.gender,
@@ -896,14 +904,9 @@ function fetchProfilesFromSupabase() {
 // Everything below is unchanged hotspot / matches / chat logic
 // ==========================================
 
-var MATCHES_STORAGE_KEY = 'profileMatches:v1';
 var CHATS_STORAGE_KEY = 'profileChats:v1';
 
 var profiles = STATIC_PROFILES.slice(); // populated further with Supabase rows in initProfileHotspots()
-
-function getProfileId(profile) {
-  return profile.id || (profile.name + '|' + profile.location);
-}
 
 function getInitials(name) {
   if (!name) return '?';
@@ -914,24 +917,17 @@ function getInitials(name) {
 }
 
 // ---------------------------------------------
-// MatchesStore — distinct matched profiles, persisted
+// MatchesStore — mutual matches, read from the database
+//
+// A match exists only when two real users have liked each other; it is created
+// by a database trigger and cannot be written from here. Same public API as
+// before (getAll / count / onChange) so the matches panel and popup are
+// unchanged — but the source of truth is now the server, not localStorage, so
+// matches survive a refresh and follow the user across sessions.
 // ---------------------------------------------
 var MatchesStore = (function() {
   var map = {};
-
-  try {
-    var raw = localStorage.getItem(MATCHES_STORAGE_KEY);
-    var stored = raw ? JSON.parse(raw) : [];
-    stored.forEach(function(p) { map[p.id] = p; });
-  } catch (e) {}
-
   var listeners = [];
-
-  function persist() {
-    try {
-      localStorage.setItem(MATCHES_STORAGE_KEY, JSON.stringify(getAll()));
-    } catch (e) {}
-  }
 
   function getAll() {
     return Object.keys(map).map(function(k) { return map[k]; });
@@ -942,27 +938,52 @@ var MatchesStore = (function() {
     listeners.forEach(function(fn) { fn(all); });
   }
 
+  function refresh() {
+    return Mingle.myMatches()
+      .then(function(rows) {
+        map = {};
+        rows.forEach(function(row) {
+          // The RPC returns the same columns as the profile table, so the
+          // existing row mapper applies unchanged.
+          var profile = mapSupabaseRowToProfile(row);
+          map[profile.id] = profile;
+        });
+        notify();
+        return getAll();
+      })
+      .catch(function(err) {
+        console.error('Could not refresh matches:', err);
+        return getAll();
+      });
+  }
+
   return {
-    add: function(profile) {
-      var id = getProfileId(profile);
-      if (map[id]) return false; // already matched -> distinct only
-      map[id] = {
-        id: id,
-        name: profile.name,
-        age: profile.age,
-        image: profile.image,
-        educationLevel: profile.educationLevel,
-        height: profile.height,
-        bio: profile.bio,
-        interests: profile.interests || []
-      };
-      persist();
-      notify();
-      return true;
-    },
+    refresh: refresh,
     getAll: getAll,
     count: function() { return Object.keys(map).length; },
     onChange: function(fn) { listeners.push(fn); }
+  };
+})();
+
+// ---------------------------------------------
+// LikesStore — which profiles this user has already liked
+//
+// Only ever the caller's own likes: the database will not reveal who liked
+// you until it becomes a match.
+// ---------------------------------------------
+var LikesStore = (function() {
+  var liked = {};
+
+  return {
+    load: function() {
+      return Mingle.myLikes().then(function(ids) {
+        liked = {};
+        ids.forEach(function(id) { liked[id] = true; });
+      });
+    },
+    has: function(realId) { return !!liked[realId]; },
+    add: function(realId) { liked[realId] = true; },
+    remove: function(realId) { delete liked[realId]; }
   };
 })();
 
@@ -1387,6 +1408,39 @@ function createProfileStickerElement(profileList) {
   card.appendChild(body);
   anchor.appendChild(card);
 
+  // Only real profiles can be liked. STATIC_PROFILES have no user behind them,
+  // and you cannot like yourself. Without an identity nothing is likeable.
+  function canLike(p) {
+    var me = Mingle.userId();
+    return !!(me && p.isReal && p.realId && p.realId !== me);
+  }
+
+  function renderMatchBtn(p) {
+    matchBtn.classList.remove('is-disabled', 'is-liked');
+
+    if (!canLike(p)) {
+      matchBtn.disabled = true;
+      matchBtn.classList.add('is-disabled');
+      matchBtn.textContent = 'Match';
+      matchBtn.title = (p.realId && p.realId === Mingle.userId())
+        ? 'This is you'
+        : 'This profile is a demo and cannot be matched';
+      return;
+    }
+
+    matchBtn.title = '';
+
+    if (LikesStore.has(p.realId)) {
+      matchBtn.disabled = true;
+      matchBtn.classList.add('is-liked');
+      matchBtn.textContent = 'Liked \u2713';
+      return;
+    }
+
+    matchBtn.disabled = false;
+    matchBtn.textContent = 'Match';
+  }
+
   function render() {
     var p = profileList[index];
     img.src = p.image;
@@ -1395,6 +1449,8 @@ function createProfileStickerElement(profileList) {
     meta.textContent = (p.educationLevel || '') + ' \u00B7 ' + (p.height || '');
     bio.textContent = p.bio || '';
     counter.textContent = (index + 1) + ' / ' + profileList.length;
+
+    renderMatchBtn(p);
 
     tags.innerHTML = '';
     (p.interests || []).slice(0, 3).forEach(function(interest) {
@@ -1425,13 +1481,35 @@ function createProfileStickerElement(profileList) {
     event.stopPropagation();
 
     var p = profileList[index];
-    MatchesStore.add(p);
+    if (!canLike(p) || LikesStore.has(p.realId)) return;
 
-    matchedFlash.classList.add('is-visible');
-    setTimeout(function() {
-      matchedFlash.classList.remove('is-visible');
-      advance();
-    }, 700);
+    // Optimistic: reflect the like immediately, and block a second click while
+    // the request is in flight.
+    LikesStore.add(p.realId);
+    renderMatchBtn(p);
+
+    Mingle.likeProfile(p.realId)
+      .then(function(result) {
+        // "It's a match!" now means exactly that: they had already liked back,
+        // and the database created the match.
+        if (result.matched) {
+          matchedFlash.classList.add('is-visible');
+          MatchesStore.refresh();
+          setTimeout(function() {
+            matchedFlash.classList.remove('is-visible');
+            advance();
+          }, 700);
+          return;
+        }
+        // Liked, waiting on them \u2014 pause on the "Liked" state, then move on.
+        setTimeout(advance, 700);
+      })
+      .catch(function(err) {
+        console.error('Could not save like:', err);
+        // Roll the button back so the like can be retried.
+        LikesStore.remove(p.realId);
+        renderMatchBtn(p);
+      });
   });
 
   var eventList = ['touchstart', 'touchmove', 'touchend', 'touchcancel', 'wheel', 'mousewheel'];
@@ -1477,13 +1555,30 @@ function setupProfileHotspots(scenes) {
 
 // ------------------------------------------------------------------
 // ENTRY POINT — call this instead of setupProfileHotspots(scenes)
-// directly. It merges STATIC_PROFILES with profiles fetched live
-// from Supabase, fills the `profiles` array, THEN builds the hotspots.
+// directly. It establishes the anonymous identity, merges STATIC_PROFILES
+// with profiles fetched live from Supabase, fills the `profiles` array,
+// THEN builds the hotspots.
 // ------------------------------------------------------------------
 function initProfileHotspots(scenes) {
-  return fetchProfilesFromSupabase()
-    .then(function(supabaseProfiles) {
-      profiles = STATIC_PROFILES.concat(supabaseProfiles);
+  // Reading profiles is public, so it must NEVER depend on identity: the tour
+  // shows the same cards whether or not anonymous sign-in succeeds.
+  var profilesPromise = fetchProfilesFromSupabase();
+
+  // Identity, likes and matches are a best-effort enhancement on top. If the
+  // anonymous session is unavailable (e.g. anonymous sign-in not enabled, or
+  // the likes/matches tables don't exist yet), the tour still renders fully and
+  // only the Match button ends up disabled.
+  var identityPromise = Mingle.ready()
+    .then(function() {
+      return Promise.all([LikesStore.load(), MatchesStore.refresh()]);
+    })
+    .catch(function(err) {
+      console.error('Anonymous session unavailable — liking disabled:', err);
+    });
+
+  return Promise.all([profilesPromise, identityPromise])
+    .then(function(results) {
+      profiles = STATIC_PROFILES.concat(results[0] || []);
       setupProfileHotspots(scenes);
     });
 }
