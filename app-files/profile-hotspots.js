@@ -887,21 +887,36 @@ function mapSupabaseRowToProfile(row) {
   };
 }
 
-function fetchProfilesFromSupabase() {
-  var url = SUPABASE_URL + '/rest/v1/' + SUPABASE_TABLE + '?select=*';
+function fetchSupabaseRows(url) {
   return fetch(url, {
     headers: {
       apikey: SUPABASE_ANON_KEY,
       Authorization: 'Bearer ' + SUPABASE_ANON_KEY
     }
-  })
-    .then(function(res) {
-      if (!res.ok) {
-        return res.text().then(function(text) {
-          throw new Error('Supabase fetch failed: ' + res.status + ' ' + res.statusText + ' — ' + text);
-        });
-      }
-      return res.json();
+  }).then(function(res) {
+    if (!res.ok) {
+      return res.text().then(function(text) {
+        throw new Error('Supabase fetch failed: ' + res.status + ' ' + res.statusText + ' — ' + text);
+      });
+    }
+    return res.json();
+  });
+}
+
+function fetchProfilesFromSupabase() {
+  var base = SUPABASE_URL + '/rest/v1/' + SUPABASE_TABLE + '?select=*';
+  // order=updated_at.desc so the most recently added/edited profiles come
+  // back first — this table has `updated_at`, not `created_at`.
+  var orderedUrl = base + '&order=updated_at.desc';
+
+  return fetchSupabaseRows(orderedUrl)
+    .catch(function(err) {
+      // The order clause failed — most likely `created_at` doesn't exist
+      // (or is named differently) on this table. Rather than lose every
+      // Supabase profile, fall back to an unordered fetch so profiles still
+      // show up; they just won't be newest-first until the column is fixed.
+      console.warn('Ordered fetch by updated_at failed, retrying without order (profiles will not be newest-first):', err);
+      return fetchSupabaseRows(base);
     })
     .then(function(rows) {
       return rows.map(mapSupabaseRowToProfile);
@@ -1677,7 +1692,10 @@ function initProfileHotspots(scenes) {
 
   return Promise.all([profilesPromise, identityPromise, countsPromise])
     .then(function(results) {
-      profiles = STATIC_PROFILES.concat(results[0] || []);
+      // Recently added (Supabase) profiles first, static demo profiles after —
+      // results[0] already comes back newest-first thanks to the
+      // order=created_at.desc on the fetch above.
+      profiles = (results[0] || []).concat(STATIC_PROFILES);
       setupProfileHotspots(scenes);
     });
 }
