@@ -33,7 +33,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Philosophy", "Reading", "PWD", "Sports"],
     bio: "Looking for someone who can convince me that life isn't all about timetables, assignemnt deadlines, and attendance sheets",
-    image: "profile/1.png",
+    image: "profile/1.webp",
     location: "Department of Economics"
   },
   {
@@ -46,7 +46,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: [ "outdoors", "reading","PWD"],
     bio: "Curious soul with a love for exploring new places, meeting new people, and making every day a little more exciting",
-    image: "profile/2.png",
+    image: "profile/2.webp",
     location: "Department of Economics"
   },
   {
@@ -59,7 +59,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "football", "PWD"],
     bio: "If your favorite hobby is making students attend class and ruining their mass bunk, we're already a perfect match..",
-    image: "profile/3.png",
+    image: "profile/3.webp",
     location: "Department of Economics"
   },
   {
@@ -72,7 +72,7 @@ var STATIC_PROFILES = [
     height: "5'5\"",
     interests: ["Movies", "sports", "PWD"],
     bio: "Creative soul, foodie, and a hopeless romantic. Seeking a partner who can laugh with me and explore life.",
-    image: "profile/4.png",
+    image: "profile/4.webp",
     location: "Department of Economics"
   },
   {
@@ -85,7 +85,7 @@ var STATIC_PROFILES = [
     height: "5'9\"",
     interests: ["Cricket", "Gym", "PWD"],
     bio: "Alpha male, ambitious, looking for a partner who’s equally driven. I’m all about growth and deen.",
-    image: "profile/5.png",
+    image: "profile/5.webp",
     location: "Department of Economics"
   },
   {
@@ -98,7 +98,7 @@ var STATIC_PROFILES = [
     height: "5'6\"",
     interests: ["sitting", "Photocopying", "PWD", "Procrastination"],
     bio: "Staff at the dept, love catching people with phone on exams. I’m easy‑going and looking for a genuine connection.",
-    image: "profile/6.png",
+    image: "profile/6.webp",
     location: "Department of Economics"
   },
     {
@@ -111,7 +111,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Music", "Photography", "Travel", "Music"],
     bio: " From Lucknow to Delhi to flying the world . Tunday Kebab lover? We’re already on the same wavelength",
-    image: "profile/7.png",
+    image: "profile/7.webp",
     location: "Department of Economics"
   },
   {
@@ -124,7 +124,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Photography", "Art", "Travel", "Philosophy"],
     bio: "Dreamer, artist, and deep conversationalist. Seeking someone who appreciates the beauty in small things.",
-    image: "profile/8.png",
+    image: "profile/8.webp",
     location: "Department of Economics"
   },
   {
@@ -137,7 +137,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Gaming", "AI", "Football", "Gym"],
     bio: "Tech nerd, gym rat, and a gamer. Looking for a geeky partner who’s into fitness and growth.",
-    image: "profile/11.png",
+    image: "profile/11.webp",
     location: "Department of Computer Science"
   },
   {
@@ -150,7 +150,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Coding", "Travel", "Music"],
     bio: "I’m a creative coder who loves art and exploring new places. Looking for a serious relationship.",
-    image: "profile/12.png",
+    image: "profile/12.webp",
     location: "Department of Computer Science"
   },
   {
@@ -163,7 +163,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Reading", "Movies", "Photography", "Outdoors"],
     bio: "Book lover, movie buff, and a photography enthusiast. Want someone who can keep up with my curiosity.",
-    image: "profile/13.png",
+    image: "profile/13.webp",
     location: "Department of Computer Science"
   },
   {
@@ -176,7 +176,7 @@ var STATIC_PROFILES = [
     height: "5'11\"",
     interests: ["AI", "Philosophy", "Cricket", "Praying"],
     bio: "PhD student, aspiring researcher, and a practicing Muslim. Looking for someone with similar ambitions.",
-    image: "profile/14.png",
+    image: "profile/14.webp",
     location: "Department of Computer Science"
   },
   {
@@ -189,7 +189,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Teaching", "Reading", "Cooking", "Travel"],
     bio: "Lecturer, foodie, and a traveller. I value education and family. Seeking a partner for life.",
-    image: "profile/15.png",
+    image: "profile/15.webp",
     location: "Department of Computer Science"
   },
   {
@@ -202,7 +202,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Gaming", "Sports", "Movies"],
     bio: "Staff at the dept, loves music and gaming. I’m chill, looking for a partner to share good times.",
-    image: "profile/16.png",
+    image: "profile/16.webp",
     location: "Department of Computer Science"
   },
   {
@@ -215,7 +215,7 @@ var STATIC_PROFILES = [
     height: "5'9\"",
     interests: ["Business", "Finance", "Cricket", "Reading Quran"],
     bio: "MBA, entrepreneur mindset, and a Muslim. Want a partner who’s supportive and business‑savvy.",
-    image: "profile/17.png",
+    image: "profile/17.webp",
     location: "Commerce Department"
   },
   {
@@ -228,7 +228,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Cooking", "Travel", "Movies"],
     bio: "Creative girl, love cooking and traveling. Looking for a genuine connection leading to marriage.",
-    image: "profile/18.png",
+    image: "profile/18.webp",
     location: "Commerce Department"
   },
   {
@@ -241,7 +241,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Music", "Photography", "Outdoors", "Sports"],
     bio: "Music lover, photographer, and outdoor enthusiast. Looking for someone adventurous and kind.",
-    image: "profile/19.png",
+    image: "profile/19.webp",
     location: "Commerce Department"
   },
   {
@@ -254,7 +254,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Finance", "Philosophy", "Gym", "Praying"],
     bio: "PhD in finance, gym‑rat, and a practicing Muslim. Seeking a partner with strong values.",
-    image: "profile/20.png",
+    image: "profile/20.webp",
     location: "Commerce Department"
   },
   {
@@ -267,7 +267,7 @@ var STATIC_PROFILES = [
     height: "5'5\"",
     interests: ["Teaching", "Reading", "Cricket", "Cooking"],
     bio: "Commerce lecturer, love teaching and sports. I’m a family person looking for a loving partner.",
-    image: "profile/21.png",
+    image: "profile/21.webp",
     location: "Commerce Department"
   },
   {
@@ -280,7 +280,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Movies", "Travel", "Animals"],
     bio: "Staff, love music and movies. I’m easy‑going and want a partner to share life’s moments with.",
-    image: "profile/22.png",
+    image: "profile/22.webp",
     location: "Commerce Department"
   },
   {
@@ -293,7 +293,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Cooking", "Travel", "Music", "Photography"],
     bio: "I’m a foodie, love to cook and travel. Looking for someone who appreciates good food and vibes.",
-    image: "profile/23.png",
+    image: "profile/23.webp",
     location: "Canteen 2"
   },
   {
@@ -306,7 +306,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Cricket", "Gaming", "Gym", "Reading"],
     bio: "Alpha male, sports lover, and a gamer. Want a partner who’s equally ambitious and fun.",
-    image: "profile/24.png",
+    image: "profile/24.webp",
     location: "Canteen 2"
   },
   {
@@ -319,7 +319,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Movies", "Outdoors", "Animals"],
     bio: "Art lover, movie buff, and nature enthusiast. Looking for a partner to share dreams with.",
-    image: "profile/25.png",
+    image: "profile/25.webp",
     location: "Canteen"
   },
   {
@@ -332,7 +332,7 @@ var STATIC_PROFILES = [
     height: "5'11\"",
     interests: ["Philosophy", "Reading Quran", "Sports", "Travel"],
     bio: "Deep thinker, practicing Muslim, and a traveler. Seeking a partner with a similar mindset.",
-    image: "profile/26.png",
+    image: "profile/26.webp",
     location: "Canteen"
   },
   {
@@ -345,7 +345,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Teaching", "Cooking", "Reading", "Music"],
     bio: "Teacher, cook, and a music lover. I want a partner who values family and growth.",
-    image: "profile/27.png",
+    image: "profile/27.webp",
     location: "Canteen"
   },
   {
@@ -358,7 +358,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Movies", "Cricket", "Travel"],
     bio: "Staff, love cricket and music. I’m a simple guy looking for a genuine connection.",
-    image: "profile/28.png",
+    image: "profile/28.webp",
     location: "Canteen"
   },
   {
@@ -371,7 +371,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Reading", "Cooking", "Travel", "Photography"],
     bio: "I’m a sociable person who loves reading and exploring new cultures. Looking for a serious relationship.",
-    image: "profile/29.png",
+    image: "profile/29.webp",
     location: "Socio Dept"
   },
   {
@@ -384,7 +384,7 @@ var STATIC_PROFILES = [
     height: "5'9\"",
     interests: ["Sports", "Politics", "Cricket", "Gym"],
     bio: "Sports enthusiast, political junkie, and a Muslim. Want a partner who challenges me intellectually.",
-    image: "profile/30.png",
+    image: "profile/30.webp",
     location: "Socio Dept"
   },
   {
@@ -397,7 +397,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Art", "Music", "Outdoors", "Movies"],
     bio: "Creative and free‑spirited, love music and nature. Looking for a soulmate to grow with.",
-    image: "profile/31.png",
+    image: "profile/31.webp",
     location: "Socio Dept"
   },
   {
@@ -410,7 +410,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Philosophy", "Reading Quran", "Travel", "Cricket"],
     bio: "PhD researcher, avid reader, and a practicing Muslim. Seeking a partner for a meaningful life.",
-    image: "profile/32.png",
+    image: "profile/32.webp",
     location: "Socio Dept"
   },
   {
@@ -423,7 +423,7 @@ var STATIC_PROFILES = [
     height: "5'5\"",
     interests: ["Teaching", "Research", "Cooking", "Travel"],
     bio: "Lecturer, researcher, and a homebody. I want a partner who is supportive and kind.",
-    image: "profile/33.png",
+    image: "profile/33.webp",
     location: "Socio Dept"
   },
   {
@@ -436,7 +436,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Movies", "Sports", "Gaming"],
     bio: "Staff, love music and gaming. I’m a chill guy looking for a partner to enjoy life with.",
-    image: "profile/34.png",
+    image: "profile/34.webp",
     location: "Socio Dept"
   },
   {
@@ -449,7 +449,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Gym", "Reading", "Sports", "Gaming"],
     bio: "Fitness freak, bookworm, and a gamer. Looking for a partner who’s active and smart.",
-    image: "profile/35.png",
+    image: "profile/35.webp",
     location: "Physics Dept"
   },
   {
@@ -462,7 +462,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Photography", "Travel", "Music"],
     bio: "Creative physicist, love art and travel. Seeking someone who sees beauty in science and life.",
-    image: "profile/36.png",
+    image: "profile/36.webp",
     location: "Physics Dept"
   },
   {
@@ -475,7 +475,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Movies", "Cooking", "Outdoors", "Animals"],
     bio: "Movie buff, foodie, and animal lover. I’m looking for a partner who’s caring and fun.",
-    image: "profile/37.png",
+    image: "profile/37.webp",
     location: "Physics Dept"
   },
   {
@@ -488,7 +488,7 @@ var STATIC_PROFILES = [
     height: "5'11\"",
     interests: ["Philosophy", "Reading Quran", "Cricket", "Travel"],
     bio: "PhD in physics, philosopher at heart, and a Muslim. Want a partner for a meaningful journey.",
-    image: "profile/38.png",
+    image: "profile/38.webp",
     location: "MMAJ Academy of International Studies"
   },
   {
@@ -501,7 +501,7 @@ var STATIC_PROFILES = [
     height: "5'5\"",
     interests: ["Teaching", "Research", "Cooking", "Reading"],
     bio: "Professor, researcher, and a family person. Looking for a partner who values knowledge and deen.",
-    image: "profile/39.png",
+    image: "profile/39.webp",
     location: "Physics Dept"
   },
   {
@@ -514,7 +514,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Sports", "Movies", "Gaming"],
     bio: "Staff, love music and sports. I’m a laid‑back guy seeking a genuine connection.",
-    image: "profile/40.png",
+    image: "profile/40.webp",
     location: "Mohibbul Hasan"
   },
   {
@@ -527,7 +527,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Gym", "Gaming", "Travel", "Sports"],
     bio: "Gym rat, gamer, and traveler. Looking for a partner who’s adventurous and fit.",
-    image: "profile/41.png",
+    image: "profile/41.webp",
     location: "Nano Dept"
   },
   {
@@ -540,7 +540,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Reading", "Photography", "Cooking"],
     bio: "Art lover, bookworm, and a foodie. I want a partner who appreciates creativity.",
-    image: "profile/42.png",
+    image: "profile/42.webp",
     location: "AJK Mass Communication"
   },
   {
@@ -553,7 +553,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Music", "Movies", "Travel", "Animals"],
     bio: "Music lover, travel enthusiast, and animal lover. Seeking a kind and adventurous partner.",
-    image: "profile/43.png",
+    image: "profile/43.webp",
     location: "Nano Dept"
   },
   {
@@ -566,7 +566,7 @@ var STATIC_PROFILES = [
     height: "5'11\"",
     interests: ["Research", "Reading Quran", "Cricket", "Gym"],
     bio: "PhD researcher, practicing Muslim, and sports lover. Want a partner with similar goals.",
-    image: "profile/44.png",
+    image: "profile/44.webp",
     location: "Nano Dept"
   },
   {
@@ -579,7 +579,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Teaching", "Science", "Cooking", "Travel"],
     bio: "Nano‑tech professor, love cooking and traveling. Looking for a partner to build a future with.",
-    image: "profile/45.png",
+    image: "profile/45.webp",
     location: "Nano Dept"
   },
   {
@@ -592,7 +592,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Movies", "Outdoors", "Sports"],
     bio: "Staff, love music and movies. I’m a simple guy looking for a meaningful relationship.",
-    image: "profile/46.png",
+    image: "profile/46.webp",
     location: "Faculty of Law & Management Studies"
   },
   {
@@ -605,7 +605,7 @@ var STATIC_PROFILES = [
     height: "5'9\"",
     interests: ["Cricket", "Gaming", "Gym", "Reading"],
     bio: "Cricket lover, gamer, and gym‑rat. Looking for a partner who’s active and supportive.",
-    image: "profile/47.png",
+    image: "profile/47.webp",
     location: "Polytechnic Dept"
   },
   {
@@ -618,7 +618,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Photography", "Travel", "Cooking"],
     bio: "Creative and adventurous, love art and cooking. Seeking a partner for a halal relationship.",
-    image: "profile/48.png",
+    image: "profile/48.webp",
     location: "Polytechnic Dept"
   },
   {
@@ -631,7 +631,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Music", "Movies", "Outdoors", "Animals"],
     bio: "Music and movie enthusiast, love nature. Want a partner who shares my passion for life.",
-    image: "profile/49.png",
+    image: "profile/49.webp",
     location: "Polytechnic Dept"
   },
   {
@@ -644,7 +644,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Philosophy", "Reading Quran", "Cricket", "Travel"],
     bio: "PhD candidate, thinker, and a Muslim. Looking for a partner to navigate life and faith together.",
-    image: "profile/50.png",
+    image: "profile/50.webp",
     location: "Polytechnic Dept"
   },
   {
@@ -657,7 +657,7 @@ var STATIC_PROFILES = [
     height: "5'5\"",
     interests: ["Teaching", "Research", "Cooking", "Reading"],
     bio: "Lecturer, researcher, and a foodie. I want a partner who values education and family.",
-    image: "profile/51.png",
+    image: "profile/51.webp",
     location: "India Arab Cultural Centre"
   },
   {
@@ -670,7 +670,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Music", "Movies", "Sports", "Gaming"],
     bio: "Staff, love music and movies. I’m a chilled guy looking for a real connection.",
-    image: "profile/52.png",
+    image: "profile/52.webp",
     location: "Faculty of Architecture"
   },
   {
@@ -683,7 +683,7 @@ var STATIC_PROFILES = [
     height: "5'10\"",
     interests: ["Gym", "Cricket", "Gaming", "Reading"],
     bio: "Alpha male energy – I grind hard in maths and in the gym. Looking for a partner who’s equally ambitious and keeps it real.",
-    image: "profile/53.png",
+    image: "profile/53.webp",
     location: "Faculty of Engineering"
   },
   {
@@ -696,7 +696,7 @@ var STATIC_PROFILES = [
     height: "5'3\"",
     interests: ["Art", "Music", "Travel", "Photography"],
     bio: "Creative soul who finds beauty in numbers and art. I’m a hopeless romantic looking for someone to explore life and cafés with.",
-    image: "profile/54.png",
+    image: "profile/54.webp",
     location: "Department of Mathematics"
   },
   {
@@ -709,7 +709,7 @@ var STATIC_PROFILES = [
     height: "5'8\"",
     interests: ["Football", "Gaming", "Outdoors", "Movies"],
     bio: "Chill vibes only – I’m a gamer, a footballer, and a big movie nerd. Want a partner who’s my best friend first, then everything else.",
-    image: "profile/55.png",
+    image: "profile/55.webp",
     location: "Department of Mathematics"
   },
   {
@@ -722,7 +722,7 @@ var STATIC_PROFILES = [
     height: "5'4\"",
     interests: ["Reading Quran", "Philosophy", "Research", "Travel"],
     bio: "PhD in pure maths, practicing Muslim, and a deep thinker. I’m seeking a partner for a halal, meaningful marriage – with intellectual and spiritual depth.",
-    image: "profile/56.png",
+    image: "profile/56.webp",
     location: "Department of Mathematics"
   },
   {
@@ -735,7 +735,7 @@ var STATIC_PROFILES = [
     height: "5'9\"",
     interests: ["Music", "Movies", "Sports", "Animals"],
     bio: "Staff at the maths dept, love music and sports. I’m an easy‑going guy looking for a genuine connection – no drama, just good times.",
-    image: "profile/57.png",
+    image: "profile/57.webp",
     location: "Deen Dayal Upadhyay Kaushal Kendra"
   },
   {
@@ -748,7 +748,7 @@ var STATIC_PROFILES = [
     height: "5'2\"",
     interests: ["Cooking", "Reading", "Photography", "Travel"],
     bio: "Foodie, photographer, and a hopeless romantic. I love cooking for loved ones and capturing sunsets. Looking for a serious partner to build a home with.",
-    image: "profile/58.png",
+    image: "profile/58.webp",
     location: "Department of Mathematics"
   },
   {
@@ -761,7 +761,7 @@ var STATIC_PROFILES = [
     height: "5'11\"",
     interests: ["Cricket", "Politics", "Gym", "Reading Quran"],
     bio: "Practicing Muslim, aspiring politician (lol), and a fitness freak. Want a partner with strong values who can match my energy and debates.",
-    image: "profile/59.png",
+    image: "profile/59.webp",
     location: "Centre for Physiotherapy"
   },
   {
@@ -774,7 +774,7 @@ var STATIC_PROFILES = [
     height: "5'5\"",
     interests: ["Teaching", "Research", "Art", "Music"],
     bio: "Professor of Mathematics, lover of art and classical music. I’m looking for a partner who values intellect, kindness, and a good conversation.",
-    image: "profile/60.png",
+    image: "profile/60.webp",
     location: "Faculty of Humanities"
   }
 ];
@@ -1400,6 +1400,13 @@ function createProfileStickerElement(profileList) {
 
   var img = document.createElement('img');
   img.classList.add('profile-hotspot-img');
+  // PERF FIX: hint the browser to defer loading this image until it's near
+  // the viewport, and to decode it off the main thread instead of blocking
+  // scroll/pan. Without this, every hotspot's photo (across ALL 25 scenes)
+  // starts downloading the moment the tour loads, which is what caused the
+  // scroll/pan lag.
+  img.loading = 'lazy';
+  img.decoding = 'async';
 
   var gradient = document.createElement('div');
   gradient.classList.add('profile-hotspot-gradient');
