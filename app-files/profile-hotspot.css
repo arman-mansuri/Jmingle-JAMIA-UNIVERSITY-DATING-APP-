@@ -55,6 +55,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 15%;
   display: block;
 }
 
@@ -290,9 +291,22 @@ body.mobile .profile-hotspot-card {
   width: 160px;
 }
 
-body.mobile .profile-hotspot-img {
-  max-height: 170px;
+/* On narrow/tall mobile screens the same yaw/pitch anchor point often lands
+   higher up on screen than it does on wide desktop viewports. Since the
+   card is anchored fully ABOVE its pin point (see .profile-hotspot above),
+   that pushed the top of the card off-screen. Anchoring it a bit lower
+   (-70% instead of -100%) leaves headroom above without needing to touch
+   every location's pitch value. */
+body.mobile .profile-hotspot {
+  transform: translate(-50%, -70%);
 }
+
+/* Removed the old max-height: 170px override — it fought with the
+   imgwrap's aspect-ratio (3/4) at the mobile card's 160px width
+   (which needs ~213px of height), capping the photo shorter than its
+   frame and making it look cut/cropped compared to desktop. The image
+   already fills exactly what .profile-hotspot-imgwrap gives it via
+   width:100%/height:100%/object-fit:cover, so no override is needed here. */
 
 body.mobile .profile-hotspot-name {
   font-size: 13px;
